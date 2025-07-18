@@ -1,41 +1,36 @@
-﻿using System;
-using NuGet.Protocol;
-using Oxide.Plugins;
-using Oxide.Core;
-using Oxide.Game.Rust.Cui;
-
-
+﻿
 namespace Oxide.Plugins
 {
-    [Info("Epic Stuff", "Unknown Author", "0.1.0")]
+    [Info("MessagePlugin", "Royboot", "0.1.0")]
     [Description("Makes epic stuff happen")]
     class MessagePlugin : CovalencePlugin
     {
-        private static PluginConfig config;
-        private float interval = config.Interval; // 3600 seconds = 1 hour
-        private List<string> Colors = config.Colors;
-        private List<string> Messages = config.Messages;
+        private static PluginConfig? _config;
+        private readonly List<float> _intervals = _config.Intervals; // 3600 seconds = 1 hour
+        private readonly List<string> _colors = _config.Colors;
+        private readonly List<string> _messages = _config.Messages;
         private void Init()
         {
-            timer.Every(interval, () =>
+            timer.Every(_intervals[0], () =>
             {
-                BroadcastWipeMessage(Messages,Colors);
+                Puts("Message plugin enabled.");
+                BroadcastWipeMessage(_messages,_colors);
             });
         }
-        private void BroadcastWipeMessage(List<string> messages,List<string> Colors)
+        private void BroadcastWipeMessage(List<string> messages,List<string> colors)
         {
             
-            string closingTag = "</color>";    
+            const string closingTag = "</color>";    
             List<string> finalMessages = new List<string>();
             for (int i = 0; i < messages.Count; i++)
             {
-                if (i < Colors.Count)
+                if (i < colors.Count)
                 {
-                    string ColorTag =  "<color=#" + Colors[i] + ">";
-                    finalMessages.Add(ColorTag+messages[i]+closingTag);
+                    string colorTag =  "<color=#" + colors[i] + ">";
+                    finalMessages.Add(colorTag+messages[i]+closingTag);
                 }
             }
-            foreach (var message in messages)
+            foreach (var message in finalMessages)
             {
                 server.Broadcast(message);
             }
@@ -45,9 +40,9 @@ namespace Oxide.Plugins
         protected override void LoadConfig()
         {
             base.LoadConfig();
-            config= Config.ReadObject<PluginConfig>();
+            _config= Config.ReadObject<PluginConfig>();
 
-            if (config == null)
+            if (_config == null)
             {
                 PrintWarning("Configuration file is missing or invalid. Loading default settings.");
                 LoadDefaultConfig();
@@ -59,7 +54,7 @@ namespace Oxide.Plugins
             Config.WriteObject(GetDefaultConfig(), true);
         }
 
-        public PluginConfig GetDefaultConfig()
+        private PluginConfig GetDefaultConfig()
         {
             return new PluginConfig
             {
@@ -73,7 +68,10 @@ namespace Oxide.Plugins
                     "<color=#ffa500>",
                     "<color=#00ffff>",
                 },
-                Interval = 3600f
+                Intervals = new List<float>()
+                {
+                    3600f,
+                }
             };
         }
     }
@@ -83,6 +81,6 @@ namespace Oxide.Plugins
     {
         public List<string> Messages { get; set; }
         public List<string> Colors = new List<string>();
-        public float Interval;
+        public List<float> Intervals;
     }
 }
