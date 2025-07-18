@@ -1,5 +1,6 @@
 Config Example:
 {
+
   "Colors": [
     "#ffa500",
     "#00ffff",
