@@ -30,7 +30,7 @@ namespace Oxide.Plugins
             {
                 if (i < colors.Count)
                 {
-                    string colorTag =  $"<color=# + {colors[i]} + >";
+                    string colorTag = $"<color={colors[i]}>";
                     finalMessages.Add(colorTag+messages[i]+closingTag);
                 }
             }
