@@ -24,14 +24,15 @@ namespace Oxide.Plugins
         }
         private void BroadcastWipeMessage(List<string> messages,List<string> Colors)
         {
-
-            string closignTags = "</color>";    
+            
+            string closingTag = "</color>";    
             List<string> finalMessages = new List<string>();
             for (int i = 0; i < messages.Count; i++)
             {
                 if (i < Colors.Count)
                 {
-                    finalMessages.Add(Colors[i]+messages[i]+closignTags);
+                    string ColorTag =  "<color=#" + Colors[i] + ">";
+                    finalMessages.Add(ColorTag+messages[i]+closingTag);
                 }
             }
             foreach (var message in messages)
@@ -64,8 +65,8 @@ namespace Oxide.Plugins
             {
                 Messages = new List<string>()
                 {
-                    "[Wipe Reminder]</color> Server wipes every Friday at 5PM EST!",
-                    "Join our Discord:</color> <color=#7289DA><u><size=16>https://discord.gg/ZnEVyCtCQv</size></u></color>",
+                    "[Wipe Reminder] Server wipes every Friday at 5PM EST!",
+                    "Join our Discord: <u><size=16>https://discord.gg/ZnEVyCtCQv</size></u>",
                 },
                 Colors = new List<string>()
                 {
