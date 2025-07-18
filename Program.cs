@@ -24,12 +24,14 @@ namespace Oxide.Plugins
         }
         private void BroadcastWipeMessage(List<string> messages,List<string> Colors)
         {
+
+            string closignTags = "</color>";    
             List<string> finalMessages = new List<string>();
             for (int i = 0; i < messages.Count; i++)
             {
                 if (i < Colors.Count)
                 {
-                    finalMessages.Add(messages[i]+Colors[i]);
+                    finalMessages.Add(Colors[i]+messages[i]+closignTags);
                 }
             }
             foreach (var message in messages)
