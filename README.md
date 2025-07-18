@@ -4,7 +4,7 @@ Config Example:
 <br>
   "Colors": [
   <br>
-    "#ffa500",
+	"#ffa500",
     <br>
     "#00ffff",
     <br>
