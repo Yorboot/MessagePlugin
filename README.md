@@ -1,5 +1,4 @@
 Config Example:
-<br>
 {
   "Colors": [
     "#ffa500",
