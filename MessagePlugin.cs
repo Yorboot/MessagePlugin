@@ -6,11 +6,15 @@ namespace Oxide.Plugins
     class MessagePlugin : CovalencePlugin
     {
         private static PluginConfig? _config;
-        private readonly List<float> _intervals = _config.Intervals; // 3600 seconds = 1 hour
-        private readonly List<string> _colors = _config.Colors;
-        private readonly List<string> _messages = _config.Messages;
+        private List<float> _intervals;// 3600 seconds = 1 hour
+        private List<string> _colors;
+        private List<string> _messages;
         private void Init()
         {
+            LoadConfig();
+            _intervals = _config.Intervals;
+            _colors = _config.Colors;
+            _messages = _config.Messages;
             timer.Every(_intervals[0], () =>
             {
                 Puts("Message plugin enabled.");
@@ -26,7 +30,7 @@ namespace Oxide.Plugins
             {
                 if (i < colors.Count)
                 {
-                    string colorTag =  "<color=#" + colors[i] + ">";
+                    string colorTag =  $"<color=# + {colors[i]} + >";
                     finalMessages.Add(colorTag+messages[i]+closingTag);
                 }
             }
@@ -54,7 +58,7 @@ namespace Oxide.Plugins
             Config.WriteObject(GetDefaultConfig(), true);
         }
 
-        private PluginConfig GetDefaultConfig()
+        private static PluginConfig GetDefaultConfig()
         {
             return new PluginConfig
             {
