@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 namespace Oxide.Plugins
 {
-    [Info("MessagePlugin", "Royboot", "0.1.0")]
+    [Info("TimedMessages", "Royboot", "0.1.0")]
     [Description("Makes epic stuff happen")]
     class MessagePlugin : CovalencePlugin
     {
