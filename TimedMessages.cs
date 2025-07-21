@@ -50,6 +50,10 @@ namespace Oxide.Plugins
                 if (i < colors.Count)
                 {
                     string colorTag = $"<color={colors[i]}>";
+                    if (colorTag == "<color=>")
+                    {
+                        continue;
+                    }
                     finalMessages.Add(colorTag+messages[i]+closingTag);
                 }
             }
