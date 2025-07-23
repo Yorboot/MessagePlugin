@@ -28,12 +28,7 @@ namespace Oxide.Plugins
             _isTimerRunning = false;
             if (!_isTimerRunning)
             {
-                timer.Every(_intervals[0], () =>
-                {
-                    Puts("Timed Messages plugin enabled.");
-                    BroadcastWipeMessage(_messages[0], _colors);
-                });
-
+                StartTimers();
             }
         }
         private void BroadcastWipeMessage(List<string> messages,List<string> colors)
