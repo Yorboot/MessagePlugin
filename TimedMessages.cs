@@ -74,14 +74,19 @@ namespace Oxide.Plugins
 
         private void StartTimers()
         {
-            for (int i = 0; i < _intervals.Count; i++)
+            if (!_isTimerRunning)
             {
-            if(i !> _messages.Count)
-                timer.Every(_intervals[i], () =>
+                for (int i = 0; i < _intervals.Count; i++)
                 {
-                    _isTimerRunning = true;
-                    BroadcastWipeMessage(_messages[i],_colors);
-                });
+                    if (i ! > _messages.Count)
+                    {
+                        timer.Every(_intervals[i], () =>
+                        {
+                            _isTimerRunning = true;
+                            BroadcastWipeMessage(_messages[i],_colors);
+                        });
+                    }
+                }
             }
         }
         private void NullChecks()
