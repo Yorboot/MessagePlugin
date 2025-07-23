@@ -115,9 +115,11 @@ namespace Oxide.Plugins
             {
                 if (player != null)
                 {
-                    if (args.Length > 0 && args.Length == 1)
+                    if (args.Length > 0)
                     {
-                        player.ChatMessage(message);
+                        string finalMessage = "<color=#fc0303>" + message + "</color>";
+                        Puts($"message sent succesfuly to {player.displayName} message: {finalMessage}");
+                        player.ChatMessage(finalMessage);
                     }
                     sender.Message($"Message send succesful {message}");
                 }
