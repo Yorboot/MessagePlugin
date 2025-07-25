@@ -5,7 +5,7 @@ using System;
 
 namespace Oxide.Plugins
 {
-    [Info("Timed Messages", "Royboot", "1.0.0")]
+    [Info("Timed messages", "Royboot", "1.0.0")]
     [Description("Timed messages allows for customizable timed messages, and includes a admin broadcast command")]
     class TimedMessages : CovalencePlugin
     {
