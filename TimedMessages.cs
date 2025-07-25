@@ -5,7 +5,7 @@ using System;
 
 namespace Oxide.Plugins
 {
-    [Info("TimedMessages", "Royboot", "0.1.0")]
+    [Info("TimedMessages", "Royboot", "1.0.0")]
     [Description("Makes epic stuff happen")]
     class TimedMessages : CovalencePlugin
     {
@@ -79,7 +79,6 @@ namespace Oxide.Plugins
             if (!_isTimerRunning)
             {
                 Puts("Starting timers");
-                Puts("Messages count" + _messages.Count);
                 for (int i = 0; i < _intervals.Count; i++)
                 {
                     if (i < _messages.Count && i <_colors.Count)
@@ -91,7 +90,6 @@ namespace Oxide.Plugins
                         }
                         timer.Every(_intervals[index], () =>
                         {
-                            Puts($"Started timer at the index of {_intervals[index]}");
                             _isTimerRunning = true;
                             BroadcastWipeMessage(_messages[index],_colors);
                         });
