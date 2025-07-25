@@ -5,8 +5,8 @@ using System;
 
 namespace Oxide.Plugins
 {
-    [Info("TimedMessages", "Royboot", "1.0.0")]
-    [Description("A plugin which allows for highly customizable timed messages, and includes a admin broadcast command")]
+    [Info("Timed Messages", "Royboot", "1.0.0")]
+    [Description("Timed messages allows for customizable timed messages, and includes a admin broadcast command")]
     class TimedMessages : CovalencePlugin
     {
         private static PluginConfig? _config;
@@ -36,6 +36,12 @@ namespace Oxide.Plugins
             NullChecks();
             StartTimers();
         }
+
+        private void OnServerShutdown()
+        {
+            _isTimerRunning = false;
+        }
+        
         private void BroadcastWipeMessage(List<string> messages,List<string> colors)
         {
             
@@ -108,6 +114,7 @@ namespace Oxide.Plugins
                 }
             }
         }
+        
         private void NullChecks()
         {
             string failedCheck = null;
@@ -152,31 +159,31 @@ namespace Oxide.Plugins
 
         private string ConvertStyleToString(string message)
         {
-            // Apply color if red is enabled
+            // Apply the red text color
             if (_isMessageRedAdminBroadcast)
             {
                 message = $"<color=#ff0000>{message}</color>";
             }
 
-            // Apply underline
+            // Apply an underline
             if (_isAdminBroadCastUnderlined)
             {
                 message = $"<u>{message}</u>";
             }
 
-            // Apply bold
+            // Apply the bold effect
             if (_isAdminBroadCastBold)
             {
                 message = $"<b>{message}</b>";
             }
 
-            // Apply italic
+            // Apply the italic styling effect
             if (_isAdminBroadcastItalic)
             {
                 message = $"<i>{message}</i>";
             }
 
-            // Apply font size
+            // Apply the font size
             if (_adminBroadCastFontSize > 0)
             {
                 message = $"<size={_adminBroadCastFontSize}>{message}</size>";
