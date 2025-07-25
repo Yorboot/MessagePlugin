@@ -22,7 +22,7 @@ namespace Oxide.Plugins
         private void Init()
         {
             permission.RegisterPermission("timedmessages.admin", this);
-            _isTimerRunning = false;
+            SetIsTimerRunning(false);
             LoadConfig();
             _intervals = _config.Intervals;
             _colors = _config.Colors;
@@ -39,9 +39,18 @@ namespace Oxide.Plugins
 
         private void OnServerShutdown()
         {
-            _isTimerRunning = false;
+           SetIsTimerRunning(false);
         }
-        
+
+        private void SetIsTimerRunning(bool value)
+        {
+            _isTimerRunning = value;
+        }
+
+        private bool GetIsTimerRunning()
+        {
+            return _isTimerRunning;
+        }
         private void BroadcastWipeMessage(List<string> messages,List<string> colors)
         {
             
@@ -93,7 +102,7 @@ namespace Oxide.Plugins
 
         private void StartTimers()
         {
-            if (!_isTimerRunning)
+            if (!GetIsTimerRunning())
             {
                 Puts("Starting timers");
                 for (int i = 0; i < _intervals.Count; i++)
@@ -107,7 +116,7 @@ namespace Oxide.Plugins
                         }
                         timer.Every(_intervals[index], () =>
                         {
-                            _isTimerRunning = true;
+                            SetIsTimerRunning(true);
                             BroadcastWipeMessage(_messages[index],_colors);
                         });
                     }
