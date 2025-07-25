@@ -110,10 +110,6 @@ namespace Oxide.Plugins
                     if (i < _messages.Count && i <_colors.Count)
                     {
                         int index = i;
-                        foreach (string str in _messages[i])
-                        {
-                            Puts(str);
-                        }
                         timer.Every(_intervals[index], () =>
                         {
                             SetIsTimerRunning(true);
