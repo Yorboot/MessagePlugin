@@ -28,6 +28,7 @@ namespace Oxide.Plugins
             _isTimerRunning = false;
             if (!_isTimerRunning)
             {
+                NullChecks();
                 StartTimers();
             }
         }
@@ -76,12 +77,19 @@ namespace Oxide.Plugins
         {
             if (!_isTimerRunning)
             {
+                Puts("Starting timers");
+                Puts("Messages count" + _messages.Count);
                 for (int i = 0; i < _intervals.Count; i++)
                 {
-                    if (i ! > _messages.Count)
+                    if (i < _messages.Count && i <_colors.Count)
                     {
+                        foreach (string str in _messages[i])
+                        {
+                            Puts(str);
+                        }
                         timer.Every(_intervals[i], () =>
                         {
+                            Puts($"Started timer at the index of {_intervals[i]}");
                             _isTimerRunning = true;
                             BroadcastWipeMessage(_messages[i],_colors);
                         });
