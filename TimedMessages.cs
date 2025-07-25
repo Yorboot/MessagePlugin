@@ -25,6 +25,7 @@ namespace Oxide.Plugins
 
         void Loaded()
         {
+            LoadConfig();
             _isTimerRunning = false;
             if (!_isTimerRunning)
             {
@@ -49,9 +50,17 @@ namespace Oxide.Plugins
                     finalMessages.Add(colorTag+messages[i]+closingTag);
                 }
             }
-            foreach (var message in finalMessages)
+
+            if (finalMessages.Count > 0)
             {
-                server.Broadcast(message);
+                foreach (var message in finalMessages)
+                {
+                    server.Broadcast(message);
+                }
+            }
+            else
+            {
+                Puts("There are no final messages to broadcast");
             }
         }
         
