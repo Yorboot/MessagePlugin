@@ -22,17 +22,6 @@ namespace Oxide.Plugins
             NullChecks();
             StartTimers();
         }
-
-        void Loaded()
-        {
-            LoadConfig();
-            _isTimerRunning = false;
-            if (!_isTimerRunning)
-            {
-                NullChecks();
-                StartTimers();
-            }
-        }
         private void BroadcastWipeMessage(List<string> messages,List<string> colors)
         {
             
@@ -92,15 +81,16 @@ namespace Oxide.Plugins
                 {
                     if (i < _messages.Count && i <_colors.Count)
                     {
+                        int index = i;
                         foreach (string str in _messages[i])
                         {
                             Puts(str);
                         }
-                        timer.Every(_intervals[i], () =>
+                        timer.Every(_intervals[index], () =>
                         {
-                            Puts($"Started timer at the index of {_intervals[i]}");
+                            Puts($"Started timer at the index of {_intervals[index]}");
                             _isTimerRunning = true;
-                            BroadcastWipeMessage(_messages[i],_colors);
+                            BroadcastWipeMessage(_messages[index],_colors);
                         });
                     }
                 }
