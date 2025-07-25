@@ -6,11 +6,11 @@ using System;
 namespace Oxide.Plugins
 {
     [Info("TimedMessages", "Royboot", "1.0.0")]
-    [Description("Makes epic stuff happen")]
+    [Description("A plugin which allows for highly customizable timed messages, and includes a admin broadcast command")]
     class TimedMessages : CovalencePlugin
     {
         private static PluginConfig? _config;
-        private List<float>? _intervals;// 3600 seconds = 1 hour
+        private List<float>? _intervals;
         private List<string>? _colors;
         private List<List<string>>? _messages;
         private static bool _isTimerRunning = false;
