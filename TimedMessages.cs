@@ -14,6 +14,11 @@ namespace Oxide.Plugins
         private List<string>? _colors;
         private List<List<string>>? _messages;
         private static bool _isTimerRunning = false;
+        private bool _isMessageRedAdminBroadcast = false;
+        private int _adminBroadCastFontSize = 12;
+        private bool _isAdminBroadCastBold = false;
+        private bool _isAdminBroadCastUnderlined = false;
+        private bool _isAdminBroadcastItalic = false;
         private void Init()
         {
             permission.RegisterPermission("timedmessages.admin", this);
@@ -130,9 +135,15 @@ namespace Oxide.Plugins
                 Intervals = new List<float>()
                 {
                     60.0f,
-                }
+                },
+                IsAdminBroadcastItalic = false,
+                IsAdminBroadCastBold = false,
+                IsAdminBroadCastUnderlined = false,
+                IsMessageRedAdminBroadcast = false,
+                AdminBroadCastFontSize = 12,
             };
         }
+        
         [Command("Broadcast")]
         private void BroadCast(IPlayer sender, string command, string[] args)
         {
@@ -170,5 +181,10 @@ namespace Oxide.Plugins
         public List<List<string>> Messages { get; set; } = new List<List<string>>();
         public List<string> Colors { get; set; } = new List<string>();
         public List<float> Intervals { get; set; } = new List<float>();
+        public bool IsMessageRedAdminBroadcast { get; set; } = false;
+        public int AdminBroadCastFontSize { get; set; } = 12;
+        public bool IsAdminBroadCastBold { get; set; } = false;
+        public bool IsAdminBroadCastUnderlined { get; set; } = false;
+        public bool IsAdminBroadcastItalic { get; set; } = false;
     }
 }
