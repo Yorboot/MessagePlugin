@@ -27,6 +27,12 @@ namespace Oxide.Plugins
             _intervals = _config.Intervals;
             _colors = _config.Colors;
             _messages = _config.Messages;
+            _isAdminBroadcastItalic = _config.IsAdminBroadcastItalic;
+            _isAdminBroadCastBold = _config.IsAdminBroadCastBold;
+            _isMessageRedAdminBroadcast = _config.IsMessageRedAdminBroadcast;
+            _adminBroadCastFontSize = _config.AdminBroadCastFontSize;
+            _isAdminBroadCastUnderlined = _config.IsAdminBroadCastUnderlined;
+            
             NullChecks();
             StartTimers();
         }
@@ -143,7 +149,41 @@ namespace Oxide.Plugins
                 AdminBroadCastFontSize = 12,
             };
         }
-        
+
+        private string ConvertStyleToString(string message)
+        {
+            // Apply color if red is enabled
+            if (_isMessageRedAdminBroadcast)
+            {
+                message = $"<color=#ff0000>{message}</color>";
+            }
+
+            // Apply underline
+            if (_isAdminBroadCastUnderlined)
+            {
+                message = $"<u>{message}</u>";
+            }
+
+            // Apply bold
+            if (_isAdminBroadCastBold)
+            {
+                message = $"<b>{message}</b>";
+            }
+
+            // Apply italic
+            if (_isAdminBroadcastItalic)
+            {
+                message = $"<i>{message}</i>";
+            }
+
+            // Apply font size
+            if (_adminBroadCastFontSize > 0)
+            {
+                message = $"<size={_adminBroadCastFontSize}>{message}</size>";
+            }
+
+            return message;
+        }
         [Command("Broadcast")]
         private void BroadCast(IPlayer sender, string command, string[] args)
         {
@@ -154,6 +194,7 @@ namespace Oxide.Plugins
             }
             var playerlist = BasePlayer.activePlayerList;
             string message = string.Join(" ", args);
+            message = ConvertStyleToString(message);
             if (args.Length == 0)
             {
                 sender.Message("Usage: /broadcast <message>");
@@ -165,9 +206,8 @@ namespace Oxide.Plugins
                 {
                     if (args.Length > 0)
                     {
-                        string finalMessage = "<color=#fc0303>" + message + "</color>";
-                        Puts($"message sent succesfuly to {player.displayName} message: {finalMessage}");
-                        player.ChatMessage(finalMessage);
+                        Puts($"message sent succesfuly to {player.displayName} message: {message}");
+                        player.ChatMessage(message);
                     }
                     sender.Message($"Message send succesful {message}");
                 }
