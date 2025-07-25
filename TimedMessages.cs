@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using Oxide.Core.Libraries.Covalence;
 using System;
+using Mono.Unix.Native;
+
 namespace Oxide.Plugins
 {
     [Info("TimedMessages", "Royboot", "0.1.0")]
@@ -14,6 +16,7 @@ namespace Oxide.Plugins
         private static bool _isTimerRunning = false;
         private void Init()
         {
+            permission.RegisterPermission("timedmessages.admin", this);
             _isTimerRunning = false;
             LoadConfig();
             _intervals = _config.Intervals;
@@ -135,6 +138,11 @@ namespace Oxide.Plugins
         [Command("Broadcast")]
         private void BroadCast(IPlayer sender, string command, string[] args)
         {
+            if (!sender.HasPermission("timedmessages.admin"))
+            {
+                sender.Message("You do not have permission to use this command this is a admin only command.");
+                return;
+            }
             var playerlist = BasePlayer.activePlayerList;
             string message = string.Join(" ", args);
             if (args.Length == 0)
