@@ -21,8 +21,10 @@ namespace Oxide.Plugins
         private bool _isAdminBroadcastItalic = false;
         private void Init()
         {
+            //Register the permission needed for the broadcast command
             permission.RegisterPermission("timedmessages.admin", this);
             SetIsTimerRunning(false);
+            //Load config values
             LoadConfig();
             _intervals = _config.Intervals;
             _colors = _config.Colors;
@@ -32,16 +34,16 @@ namespace Oxide.Plugins
             _isMessageRedAdminBroadcast = _config.IsMessageRedAdminBroadcast;
             _adminBroadCastFontSize = _config.AdminBroadCastFontSize;
             _isAdminBroadCastUnderlined = _config.IsAdminBroadCastUnderlined;
-            
+            //do null checks to make sure everything is in order to start broadcasting messages
             NullChecks();
             StartTimers();
         }
-
+        //set the state to false to prevent memory leaks
         private void OnServerShutdown()
         {
            SetIsTimerRunning(false);
         }
-
+        //define getters and setters to cache the _isTimerRunning var
         private void SetIsTimerRunning(bool value)
         {
             _isTimerRunning = value;
