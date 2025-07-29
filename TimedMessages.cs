@@ -105,6 +105,10 @@ namespace Oxide.Plugins
         //method to start running all timers on multiple different intervals
         private void StartTimers()
         {
+            if (_intervals?.Count != _messages?.Count)
+            {
+                throw new ArgumentException("Invalid number of intervals");
+            }
             //a check to make sure this function does not get set multiple times
             if (!GetIsTimerRunning())
             {
@@ -116,7 +120,7 @@ namespace Oxide.Plugins
                         int index = i;
                         timer.Every(_intervals[index], () =>
                         {
-                            BroadcastWipeMessage(_messages[index],_colors);
+                            BroadcastWipeMessage(_messages[index],_colors[index]);
                         });
                     }
                 }
@@ -150,10 +154,13 @@ namespace Oxide.Plugins
                         "Join our Discord: <u><size=16>https://discord.gg/</size></u>",
                     },
                 },
-                Colors = new List<string>()
+                Colors = new List<List<string>>()
                 {
-                    "#ffa500",
-                    "#00ffff",
+                    new List<string>()
+                    {
+                        "#ffa500",
+                        "#00ffff",
+                    }
                 },
                 Intervals = new List<float>()
                 {
@@ -236,7 +243,7 @@ namespace Oxide.Plugins
     class PluginConfig
     {
         public List<List<string>> Messages { get; set; } = new List<List<string>>();
-        public List<string> Colors { get; set; } = new List<string>();
+        public List<List<string>> Colors { get; set; } = new List<List<string>>();
         public List<float> Intervals { get; set; } = new List<float>();
         public bool IsMessageRedAdminBroadcast { get; set; } = false;
         public int AdminBroadCastFontSize { get; set; } = 12;
