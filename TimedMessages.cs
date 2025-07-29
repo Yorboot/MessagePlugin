@@ -144,7 +144,7 @@ namespace Oxide.Plugins
                 {
                     new List<string>() {
                         "[Wipe Reminder] Server wipes every Friday at 5PM EST!",
-                        "Join our Discord: <u><size=16>https://discord.gg/ZnEVyCtCQv</size></u>",
+                        "Join our Discord: <u><size=16>https://discord.gg/</size></u>",
                     },
                 },
                 Colors = new List<string>()
