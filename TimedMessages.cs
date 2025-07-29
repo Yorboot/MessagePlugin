@@ -11,7 +11,7 @@ namespace Oxide.Plugins
     {
         private static PluginConfig? _config;
         private List<float>? _intervals;
-        private List<string>? _colors;
+        private List<List<string>>? _colors;
         private List<List<string>>? _messages;
         private static bool _isTimerRunning = false;
         private bool _isMessageRedAdminBroadcast = false;
@@ -53,9 +53,9 @@ namespace Oxide.Plugins
         {
             return _isTimerRunning;
         }
+        //custom function to add in customizations to the Broadcasted messages
         private void BroadcastWipeMessage(List<string> messages,List<string> colors)
         {
-            
             const string closingTag = "</color>";    
             List<string> finalMessages = new List<string>();
             for (int i = 0; i < messages.Count; i++)
@@ -101,9 +101,11 @@ namespace Oxide.Plugins
         {
             Config.WriteObject(GetDefaultConfig(), true);
         }
-
+    
+        //method to start running all timers on multiple different intervals
         private void StartTimers()
         {
+            //a check to make sure this function does not get set multiple times
             if (!GetIsTimerRunning())
             {
                 Puts("Starting timers");
@@ -114,16 +116,17 @@ namespace Oxide.Plugins
                         int index = i;
                         timer.Every(_intervals[index], () =>
                         {
-                            SetIsTimerRunning(true);
                             BroadcastWipeMessage(_messages[index],_colors);
                         });
                     }
                 }
+                SetIsTimerRunning(true);
             }
         }
         
         private void NullChecks()
         {
+            //run null checks to make sure no lists are left empty else throw a error with wich list is empty
             string failedCheck = null;
 
             if (_intervals.Count == 0) failedCheck = "_intervals";
