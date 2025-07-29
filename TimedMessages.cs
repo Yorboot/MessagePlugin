@@ -5,7 +5,7 @@ using System;
 
 namespace Oxide.Plugins
 {
-    [Info("Timed messages", "Royboot", "1.0.0")]
+    [Info("Timed messages", "Royboot", "1.0.2")]
     [Description("Timed messages allows for customizable timed messages, and includes a admin broadcast command")]
     class TimedMessages : CovalencePlugin
     {
@@ -13,6 +13,10 @@ namespace Oxide.Plugins
         private List<float>? _intervals;
         private List<List<string>>? _colors;
         private List<List<string>>? _messages;
+        private bool _makeMessagesBold = false;
+        private bool _makeMessagesUnderlined = false;
+        private bool _makeMessagesItalic = false;
+        private int _broadcastMessageFontSize = 12;
         private static bool _isTimerRunning = false;
         private bool _isMessageRedAdminBroadcast = false;
         private int _adminBroadCastFontSize = 12;
@@ -34,6 +38,10 @@ namespace Oxide.Plugins
             _isMessageRedAdminBroadcast = _config.IsMessageRedAdminBroadcast;
             _adminBroadCastFontSize = _config.AdminBroadCastFontSize;
             _isAdminBroadCastUnderlined = _config.IsAdminBroadCastUnderlined;
+            _makeMessagesBold = _config.makeMessagesBold;
+            _makeMessagesUnderlined = _config.makeMessagesUnderlined;
+            _makeMessagesItalic = _config.makeMessagesItalic;
+            _broadcastMessageFontSize = _config.broadcastMessageFontSize;
             //do null checks to make sure everything is in order to start broadcasting messages
             NullChecks();
             StartTimers();
@@ -62,12 +70,7 @@ namespace Oxide.Plugins
             {
                 if (i < colors.Count)
                 {
-                    string colorTag = $"<color={colors[i]}>";
-                    if (colorTag == "<color=>")
-                    {
-                        continue;
-                    }
-                    finalMessages.Add(colorTag+messages[i]+closingTag);
+                    finalMessages.Add(ConvertStyleToStringBroadCast(messages[i],colors[i]));
                 }
             }
 
@@ -151,7 +154,7 @@ namespace Oxide.Plugins
                 {
                     new List<string>() {
                         "[Wipe Reminder] Server wipes every Friday at 5PM EST!",
-                        "Join our Discord: <u><size=16>https://discord.gg/</size></u>",
+                        "Join our Discord: <u><size=16>discord link here</size></u>",
                     },
                 },
                 Colors = new List<List<string>>()
@@ -171,10 +174,14 @@ namespace Oxide.Plugins
                 IsAdminBroadCastUnderlined = false,
                 IsMessageRedAdminBroadcast = false,
                 AdminBroadCastFontSize = 12,
+                makeMessagesBold = false,
+                makeMessagesUnderlined = false,
+                makeMessagesItalic = false,
+                broadcastMessageFontSize = 12,
             };
         }
 
-        private string ConvertStyleToString(string message)
+        private string ConvertStyleToStringAdminBroadCast(string message)
         {
             // Apply the red text color
             if (_isMessageRedAdminBroadcast)
@@ -208,6 +215,39 @@ namespace Oxide.Plugins
 
             return message;
         }
+        private string ConvertStyleToStringBroadCast(string message,string color)
+        {
+            //apply color
+            if (color != string.Empty || color != "<color=>")
+            {
+                message = $"<color={color}>{message}</color>";
+            }
+            // Apply an underline
+            if (_makeMessagesUnderlined)
+            {
+                message = $"<u>{message}</u>";
+            }
+
+            // Apply the bold effect
+            if (_makeMessagesBold)
+            {
+                message = $"<b>{message}</b>";
+            }
+
+            // Apply the italic styling effect
+            if (_makeMessagesItalic)
+            {
+                message = $"<i>{message}</i>";
+            }
+
+            // Apply the font size
+            if (_adminBroadCastFontSize > 0)
+            {
+                message = $"<size={_broadcastMessageFontSize}>{message}</size>";
+            }
+
+            return message;
+        }
         [Command("Broadcast")]
         private void BroadCast(IPlayer sender, string command, string[] args)
         {
@@ -218,7 +258,7 @@ namespace Oxide.Plugins
             }
             var playerlist = BasePlayer.activePlayerList;
             string message = string.Join(" ", args);
-            message = ConvertStyleToString(message);
+            message = ConvertStyleToStringAdminBroadCast(message);
             if (args.Length == 0)
             {
                 sender.Message("Usage: /broadcast <message>");
@@ -250,5 +290,9 @@ namespace Oxide.Plugins
         public bool IsAdminBroadCastBold { get; set; } = false;
         public bool IsAdminBroadCastUnderlined { get; set; } = false;
         public bool IsAdminBroadcastItalic { get; set; } = false;
+        public bool makeMessagesBold { get; set; } = false;
+        public bool makeMessagesUnderlined { get; set; } = false;
+        public bool makeMessagesItalic { get; set; } = false;
+        public int broadcastMessageFontSize { get; set; } = 12;
     }
 }
