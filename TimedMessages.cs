@@ -18,12 +18,12 @@ namespace Oxide.Plugins
         private bool _makeMessagesUnderlined = false;
         private bool _makeMessagesItalic = false;
         private int _broadcastMessageFontSize = 12;
-        private static bool _isTimerRunning = false;
-        private bool _isMessageRedAdminBroadcast = false;
-        private int _adminBroadCastFontSize = 12;
-        private bool _isAdminBroadCastBold = false;
-        private bool _isAdminBroadCastUnderlined = false;
-        private bool _isAdminBroadcastItalic = false;
+        private static bool _isTimerRunning;
+        private bool _isMessageRedAdminBroadcast;
+        private int _adminBroadCastFontSize;
+        private bool _isAdminBroadCastBold;
+        private bool _isAdminBroadCastUnderlined;
+        private bool _isAdminBroadcastItalic;
         private void Init()
         {
             //Register the permission needed for the broadcast command
