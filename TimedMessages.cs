@@ -13,6 +13,7 @@ namespace Oxide.Plugins
         private List<float>? _intervals;
         private List<List<string>>? _colors;
         private List<List<string>>? _messages;
+        private List<MessageConfig>? _MessageConfigLists;
         private bool _makeMessagesBold = false;
         private bool _makeMessagesUnderlined = false;
         private bool _makeMessagesItalic = false;
@@ -33,15 +34,12 @@ namespace Oxide.Plugins
             _intervals = _config.Intervals;
             _colors = _config.Colors;
             _messages = _config.Messages;
+            _MessageConfigLists = _config.MessageConfigLists;
             _isAdminBroadcastItalic = _config.IsAdminBroadcastItalic;
             _isAdminBroadCastBold = _config.IsAdminBroadCastBold;
             _isMessageRedAdminBroadcast = _config.IsMessageRedAdminBroadcast;
             _adminBroadCastFontSize = _config.AdminBroadCastFontSize;
             _isAdminBroadCastUnderlined = _config.IsAdminBroadCastUnderlined;
-            _makeMessagesBold = _config.makeMessagesBold;
-            _makeMessagesUnderlined = _config.makeMessagesUnderlined;
-            _makeMessagesItalic = _config.makeMessagesItalic;
-            _broadcastMessageFontSize = _config.broadcastMessageFontSize;
             //do null checks to make sure everything is in order to start broadcasting messages
             NullChecks();
             StartTimers();
@@ -62,7 +60,7 @@ namespace Oxide.Plugins
             return _isTimerRunning;
         }
         //custom function to add in customizations to the Broadcasted messages
-        private void BroadcastWipeMessage(List<string> messages,List<string> colors)
+        private void BroadcastWipeMessage(List<string> messages,List<string> colors,MessageConfig messageConfig)
         {
             const string closingTag = "</color>";    
             List<string> finalMessages = new List<string>();
@@ -70,7 +68,7 @@ namespace Oxide.Plugins
             {
                 if (i < colors.Count)
                 {
-                    finalMessages.Add(ConvertStyleToStringBroadCast(messages[i],colors[i]));
+                    finalMessages.Add(ConvertStyleToStringBroadCast(messages[i],colors[i],messageConfig));
                 }
             }
 
@@ -95,7 +93,7 @@ namespace Oxide.Plugins
 
             if (_config == null)
             {
-                PrintWarning("Configuration file is missing or invalid. Loading default settings.");
+                Puts("Failed to load configuration. loading default config");
                 LoadDefaultConfig();
             }
         }
@@ -112,6 +110,11 @@ namespace Oxide.Plugins
             {
                 throw new ArgumentException("Invalid number of intervals");
             }
+
+            if (_MessageConfigLists?.Count != _messages?.Count)
+            {
+                throw new ArgumentException("Invalid number of Configuration sets");
+            }
             //a check to make sure this function does not get set multiple times
             if (!GetIsTimerRunning())
             {
@@ -123,7 +126,7 @@ namespace Oxide.Plugins
                         int index = i;
                         timer.Every(_intervals[index], () =>
                         {
-                            BroadcastWipeMessage(_messages[index],_colors[index]);
+                            BroadcastWipeMessage(_messages[index],_colors[index],_MessageConfigLists[index]);
                         });
                     }
                 }
@@ -140,6 +143,7 @@ namespace Oxide.Plugins
             else if (_colors.Count == 0) failedCheck = "_colors";
             else if (_messages.Count == 0) failedCheck = "_messages";
             else if (_messages[0].Count == 0) failedCheck = "_messages[0]";
+            else if(_MessageConfigLists?.Count == 0) failedCheck = "_configLists";
 
             if (failedCheck != null)
             {
@@ -169,15 +173,21 @@ namespace Oxide.Plugins
                 {
                     60.0f,
                 },
+                MessageConfigLists = new List<MessageConfig>()
+                {
+                    new MessageConfig()
+                    {
+                        broadcastMessageFontSize = 12,
+                        makeMessagesItalic = false,
+                        makeMessagesBold = false,
+                        makeMessagesUnderlined = false,
+                    }
+                },
                 IsAdminBroadcastItalic = false,
                 IsAdminBroadCastBold = false,
                 IsAdminBroadCastUnderlined = false,
                 IsMessageRedAdminBroadcast = false,
                 AdminBroadCastFontSize = 12,
-                makeMessagesBold = false,
-                makeMessagesUnderlined = false,
-                makeMessagesItalic = false,
-                broadcastMessageFontSize = 12,
             };
         }
 
@@ -215,7 +225,7 @@ namespace Oxide.Plugins
 
             return message;
         }
-        private string ConvertStyleToStringBroadCast(string message,string color)
+        private string ConvertStyleToStringBroadCast(string message,string color,MessageConfig config)
         {
             //apply color
             if (color != string.Empty || color != "<color=>")
@@ -223,19 +233,19 @@ namespace Oxide.Plugins
                 message = $"<color={color}>{message}</color>";
             }
             // Apply an underline
-            if (_makeMessagesUnderlined)
+            if (config.makeMessagesUnderlined)
             {
                 message = $"<u>{message}</u>";
             }
 
             // Apply the bold effect
-            if (_makeMessagesBold)
+            if (config.makeMessagesBold)
             {
                 message = $"<b>{message}</b>";
             }
 
             // Apply the italic styling effect
-            if (_makeMessagesItalic)
+            if (config.makeMessagesItalic)
             {
                 message = $"<i>{message}</i>";
             }
@@ -243,7 +253,7 @@ namespace Oxide.Plugins
             // Apply the font size
             if (_adminBroadCastFontSize > 0)
             {
-                message = $"<size={_broadcastMessageFontSize}>{message}</size>";
+                message = $"<size={config.broadcastMessageFontSize}>{message}</size>";
             }
 
             return message;
@@ -280,8 +290,9 @@ namespace Oxide.Plugins
     }
     
 
-    class PluginConfig
+    public class PluginConfig
     {
+        public List<MessageConfig> MessageConfigLists { get; set; }
         public List<List<string>> Messages { get; set; } = new List<List<string>>();
         public List<List<string>> Colors { get; set; } = new List<List<string>>();
         public List<float> Intervals { get; set; } = new List<float>();
@@ -290,9 +301,13 @@ namespace Oxide.Plugins
         public bool IsAdminBroadCastBold { get; set; } = false;
         public bool IsAdminBroadCastUnderlined { get; set; } = false;
         public bool IsAdminBroadcastItalic { get; set; } = false;
-        public bool makeMessagesBold { get; set; } = false;
-        public bool makeMessagesUnderlined { get; set; } = false;
-        public bool makeMessagesItalic { get; set; } = false;
-        public int broadcastMessageFontSize { get; set; } = 12;
+    }
+
+    public class MessageConfig
+    {
+        public bool makeMessagesBold { get; set; }
+        public bool makeMessagesUnderlined { get; set; }
+        public bool makeMessagesItalic { get; set; }
+        public int broadcastMessageFontSize { get; set; }
     }
 }
