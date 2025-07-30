@@ -62,7 +62,6 @@ namespace Oxide.Plugins
         //custom function to add in customizations to the Broadcasted messages
         private void BroadcastWipeMessage(List<string> messages,List<string> colors,MessageConfig messageConfig)
         {
-            const string closingTag = "</color>";    
             List<string> finalMessages = new List<string>();
             for (int i = 0; i < messages.Count; i++)
             {
