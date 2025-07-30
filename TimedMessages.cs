@@ -14,10 +14,6 @@ namespace Oxide.Plugins
         private List<List<string>>? _colors;
         private List<List<string>>? _messages;
         private List<MessageConfig>? _messageConfigLists;
-        private bool _makeMessagesBold = false;
-        private bool _makeMessagesUnderlined = false;
-        private bool _makeMessagesItalic = false;
-        private int _broadcastMessageFontSize = 12;
         private static bool _isTimerRunning;
         private bool _isMessageRedAdminBroadcast;
         private int _adminBroadCastFontSize;
