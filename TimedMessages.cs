@@ -58,6 +58,10 @@ namespace Oxide.Plugins
         //custom function to add in customizations to the Broadcasted messages
         private void BroadcastWipeMessage(List<string> messages,List<string> colors,MessageConfig messageConfig)
         {
+            if (messageConfig == null)
+            {
+                throw new ArgumentNullException($"MessageConfig is null please check your config");
+            }
             List<string> finalMessages = new List<string>();
             for (int i = 0; i < messages.Count; i++)
             {
@@ -73,8 +77,7 @@ namespace Oxide.Plugins
                 {
                     server.Broadcast(message);
                 }
-            }
-            else
+            }else
             {
                 Puts("There are no final messages to broadcast");
             }
