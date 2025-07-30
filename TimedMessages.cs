@@ -13,7 +13,7 @@ namespace Oxide.Plugins
         private List<float>? _intervals;
         private List<List<string>>? _colors;
         private List<List<string>>? _messages;
-        private List<MessageConfig>? _MessageConfigLists;
+        private List<MessageConfig>? _messageConfigLists;
         private bool _makeMessagesBold = false;
         private bool _makeMessagesUnderlined = false;
         private bool _makeMessagesItalic = false;
@@ -34,7 +34,7 @@ namespace Oxide.Plugins
             _intervals = _config.Intervals;
             _colors = _config.Colors;
             _messages = _config.Messages;
-            _MessageConfigLists = _config.MessageConfigLists;
+            _messageConfigLists = _config.MessageConfigLists;
             _isAdminBroadcastItalic = _config.IsAdminBroadcastItalic;
             _isAdminBroadCastBold = _config.IsAdminBroadCastBold;
             _isMessageRedAdminBroadcast = _config.IsMessageRedAdminBroadcast;
@@ -110,7 +110,7 @@ namespace Oxide.Plugins
                 throw new ArgumentException("Invalid number of intervals");
             }
 
-            if (_MessageConfigLists?.Count != _messages?.Count)
+            if (_messageConfigLists?.Count != _messages?.Count)
             {
                 throw new ArgumentException("Invalid number of Configuration sets");
             }
@@ -125,7 +125,7 @@ namespace Oxide.Plugins
                         int index = i;
                         timer.Every(_intervals[index], () =>
                         {
-                            BroadcastWipeMessage(_messages[index],_colors[index],_MessageConfigLists[index]);
+                            BroadcastWipeMessage(_messages[index],_colors[index],_messageConfigLists[index]);
                         });
                     }
                 }
@@ -142,7 +142,7 @@ namespace Oxide.Plugins
             else if (_colors.Count == 0) failedCheck = "_colors";
             else if (_messages.Count == 0) failedCheck = "_messages";
             else if (_messages[0].Count == 0) failedCheck = "_messages[0]";
-            else if(_MessageConfigLists?.Count == 0) failedCheck = "_configLists";
+            else if(_messageConfigLists?.Count == 0) failedCheck = "_configLists";
 
             if (failedCheck != null)
             {
